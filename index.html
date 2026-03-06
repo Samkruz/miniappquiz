@@ -145,7 +145,7 @@ margin-top:10px;
 
 </select>
 
-<button onclick="next(4)">Далее</button>
+<button onclick="checkSocial()">Далее</button>
 
 </div>
 
@@ -319,6 +319,47 @@ document.getElementById("screen"+n).classList.remove("hidden");
 
 }
 
+function checkSocial(){
+
+let count=document.getElementById("count").value;
+
+if(count=="не ведем"){
+    
+    showNoSocialResult();
+
+}else{
+
+    next(4);
+
+}
+
+function showNoSocialResult(){
+
+next(7);
+
+document.querySelector("#screen7 .result").innerHTML=`
+
+Ваш бизнес почти не использует соцсети
+
+<br><br>
+
+Сейчас вы теряете потенциальных клиентов,
+которые ищут вас онлайн.
+
+<br><br>
+
+Бизнесы вашей ниши получают:
+
+<br><br>
+
++300% охвата  
++5-20 клиентов в месяц  
+рост узнаваемости бренда
+
+`;
+
+}
+
 function analyze(){
 
 next(6);
@@ -383,5 +424,6 @@ alert("Заявка отправлена");
 
 </body>
 </html>
+
 
 
