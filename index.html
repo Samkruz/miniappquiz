@@ -366,6 +366,52 @@ next(6);
 
 setTimeout(()=>{
 
+let count=document.getElementById("count").value;
+let freq=document.getElementById("freq").value;
+
+let score1=0;
+let score2=0;
+
+/* оценка соцсетей */
+
+if(count=="не ведем"){score1=0;}
+if(count=="1-2"){score1=30;}
+if(count=="3-5"){score1=60;}
+if(count=="6+"){score1=80;}
+
+/* оценка частоты */
+
+if(freq=="ежедневно"){score2=80;}
+if(freq=="несколько раз в неделю"){score2=60;}
+if(freq=="редко"){score2=30;}
+if(freq=="почти не публикуем"){score2=10;}
+
+let score=Math.round((score1+score2)/2);
+
+let ideasBlock=document.querySelector("#screen7 .result");
+
+ideasBlock.innerHTML=
+
+"Ваш SMM уровень: <b>"+score+"/100</b><br><br>"+
+
+"Вы используете только <b>"+score+"% потенциала соцсетей</b><br><br>"+
+
+"Бизнесы вашей ниши получают:<br><br>"+
+
+"+250% охвата<br>"+
+"+5-20 клиентов в месяц<br>"+
+"рост узнаваемости бренда";
+
+next(7);
+
+},2000);
+
+}
+
+next(6);
+
+setTimeout(()=>{
+
 next(7);
 
 },2000);
@@ -424,6 +470,7 @@ alert("Заявка отправлена");
 
 </body>
 </html>
+
 
 
 
