@@ -1,70 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
-<title>Kineiro</title>
+<title>Kineiro Audit</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 
-.progress{
-width:100%;
-height:8px;
-background:rgba(255,255,255,0.1);
-border-radius:10px;
-margin-top:10px;
-overflow:hidden;
-}
-
-.progress-bar{
-width:0%;
-height:100%;
-background:linear-gradient(90deg,#3b82f6,#9333ea);
-transition:width 2s linear;
-}
-
 body{
 margin:0;
 font-family:Arial;
+background:linear-gradient(120deg,#0f1c3f,#4c1a7f);
 color:white;
-min-height:100vh;
 display:flex;
 justify-content:center;
-align-items:flex-start;
-padding-top:60px;
-
-background:
-radial-gradient(circle at 20% 30%, #3b82f6, transparent 40%),
-radial-gradient(circle at 80% 70%, #9333ea, transparent 40%),
-#020617;
+align-items:center;
+height:100vh;
 }
 
 .card{
-backdrop-filter:blur(20px);
-background:rgba(15,23,42,0.7);
+width:90%;
+max-width:420px;
+background:#0c1633;
 padding:30px;
 border-radius:20px;
-width:340px;
-text-align:center;
-box-shadow:0 0 40px rgba(59,130,246,0.4);
+box-shadow:0 0 40px rgba(0,0,0,0.6);
 }
 
-select,input{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-margin-top:15px;
-font-size:15px;
+h2{
+text-align:center;
 }
 
 button{
 width:100%;
 padding:14px;
-border-radius:12px;
 border:none;
+border-radius:10px;
 margin-top:15px;
 background:linear-gradient(90deg,#3b82f6,#9333ea);
 color:white;
@@ -72,278 +44,299 @@ font-size:16px;
 cursor:pointer;
 }
 
-.idea{
-background:rgba(255,255,255,0.05);
-padding:10px;
+select,input{
+width:100%;
+padding:12px;
 border-radius:8px;
+border:none;
+margin-top:10px;
+}
+
+.hidden{
+display:none;
+}
+
+.checkbox{
 margin-top:8px;
 }
 
-</style>
+.result{
+background:#152348;
+padding:15px;
+border-radius:10px;
+margin-top:10px;
+}
 
+</style>
 </head>
 
 <body>
 
 <div class="card">
 
-<h2>Kineiro</h2>
-<p>Получите идеи постов</p>
+<div id="screen1">
 
-<input id="name" placeholder="Ваше имя">
+<h2>AI аудит соцсетей</h2>
+
+<p>Узнайте за 2 минуты<br>сколько клиентов вы теряете</p>
+
+<button onclick="next(2)">Начать анализ</button>
+
+</div>
+
+
+<div id="screen2" class="hidden">
+
+<p>В какой нише ваш бизнес?</p>
 
 <select id="niche">
 
 <option value="">Выберите нишу</option>
-<option value="beauty">Салон красоты</option>
-<option value="dentist">Стоматология</option>
-<option value="fitness">Фитнес клуб</option>
-<option value="restaurant">Ресторан / кафе</option>
-<option value="shop">Интернет-магазин</option>
-<option value="realestate">Недвижимость</option>
-<option value="education">Образование</option>
-<option value="coach">Психолог / коуч</option>
-<option value="autoservice">Автосервис</option>
-<option value="clinic">Медицинская клиника</option>
-<option value="law">Юридические услуги</option>
-<option value="marketing">Маркетинг</option>
-<option value="travel">Туризм</option>
-<option value="construction">Строительство</option>
-<option value="expert">Личный бренд</option>
+
+<option>Салон красоты</option>
+<option>Стоматология</option>
+<option>Косметология</option>
+<option>Медицина / клиника</option>
+<option>Фитнес клуб</option>
+<option>Ресторан / кафе</option>
+<option>Интернет-магазин</option>
+<option>Офлайн магазин</option>
+<option>Недвижимость</option>
+<option>Строительство</option>
+<option>Образование</option>
+<option>Юридические услуги</option>
+<option>Маркетинг</option>
+<option>Автосервис</option>
+<option>Туризм</option>
+<option>Психология</option>
+<option>Личный бренд</option>
+<option>B2B услуги</option>
+<option>Производство</option>
+<option>IT / технологии</option>
+<option>Другое</option>
 
 </select>
 
-<button onclick="generateIdeas()">Получить идеи</button>
+<button onclick="next(3)">Далее</button>
 
-<div id="loader" style="display:none;margin-top:20px;">
+</div>
 
-<p>AI анализирует вашу нишу...</p>
 
-<div class="progress">
-<div class="progress-bar" id="progressBar"></div>
+<div id="screen3" class="hidden">
+
+<p>Сколько соцсетей ведете?</p>
+
+<select id="count">
+
+<option>не ведем</option>
+<option>1-2</option>
+<option>3-5</option>
+<option>6+</option>
+
+</select>
+
+<button onclick="next(4)">Далее</button>
+
+</div>
+
+
+<div id="screen4" class="hidden">
+
+<p>Какие соцсети используете?</p>
+
+<div class="checkbox"><input type="checkbox" value="Instagram"> Instagram</div>
+<div class="checkbox"><input type="checkbox" value="Telegram"> Telegram</div>
+<div class="checkbox"><input type="checkbox" value="TikTok"> TikTok</div>
+<div class="checkbox"><input type="checkbox" value="YouTube"> YouTube</div>
+<div class="checkbox"><input type="checkbox" value="VK"> VK</div>
+<div class="checkbox"><input type="checkbox" value="Pinterest"> Pinterest</div>
+<div class="checkbox"><input type="checkbox" value="X"> X</div>
+<div class="checkbox"><input type="checkbox" value="LinkedIn"> LinkedIn</div>
+<div class="checkbox"><input type="checkbox" value="Facebook"> Facebook</div>
+<div class="checkbox"><input type="checkbox" value="Дзен"> Дзен</div>
+
+<button onclick="next(5)">Далее</button>
+
+</div>
+
+
+<div id="screen5" class="hidden">
+
+<p>Как часто публикуете контент?</p>
+
+<select id="freq">
+
+<option>ежедневно</option>
+<option>несколько раз в неделю</option>
+<option>редко</option>
+<option>почти не публикуем</option>
+
+</select>
+
+<button onclick="analyze()">Запустить AI анализ</button>
+
+</div>
+
+
+<div id="screen6" class="hidden">
+
+<p>AI анализирует ваш бизнес...</p>
+
+<div class="result">
+
+✔ анализируем нишу<br>
+✔ анализируем конкурентов<br>
+✔ считаем потенциал роста<br>
+✔ формируем стратегию
+
 </div>
 
 </div>
 
-<div id="ideas"></div>
 
-<button id="leadBtn" onclick="sendLead()" style="display:none;">
-Получить контент план
-</button>
+<div id="screen7" class="hidden">
 
-<div id="phoneBlock" style="display:none;">
-<button onclick="requestPhone()">
-Оставить номер телефона
-</button>
+<h2>Результат</h2>
+
+<div class="result">
+
+Вы используете только <b>35% потенциала соцсетей</b>
+
+<br><br>
+
+Бизнесы вашей ниши получают:
+
+<br><br>
+
++250% охвата<br>
++5-20 клиентов в месяц<br>
+рост узнаваемости бренда
+
 </div>
+
+<button onclick="next(8)">Посмотреть решение</button>
+
+</div>
+
+
+<div id="screen8" class="hidden">
+
+<h2>Наше решение</h2>
+
+<div class="result">
+
+Мы автоматизируем ведение<br>
+<b>8 соцсетей</b> вашего бизнеса
+
+<br><br>
+
+✔ ежедневный контент  
+✔ изображения  
+✔ видео  
+✔ стратегия роста  
+✔ публикации во все соцсети
+
+</div>
+
+<button onclick="next(9)">Узнать стоимость</button>
+
+</div>
+
+
+<div id="screen9" class="hidden">
+
+<h2>8 соцсетей под ключ</h2>
+
+<div class="result">
+
+<b>35 000 ₽ / месяц</b>
+
+<br><br>
+
+контент создается нейросетями  
+и публикуется ежедневно
+
+</div>
+
+<input id="name" placeholder="Ваше имя">
+
+<button onclick="sendLead()">Получить стратегию</button>
+
+</div>
+
 
 </div>
 
 <script>
 
-let tg = window.Telegram?.WebApp;
-
-let user = {
-username:"unknown",
-id:"unknown"
-};
-
-if(tg){
+let tg = window.Telegram.WebApp;
 tg.expand();
-user = tg.initDataUnsafe?.user || user;
+
+function next(n){
+
+document.querySelectorAll(".card > div").forEach(el=>el.classList.add("hidden"));
+
+document.getElementById("screen"+n).classList.remove("hidden");
+
 }
 
-const BOT_TOKEN="8639552988:AAGi3x43OyD5PrRDyOUKrvNk6Ew2sHXDy8Q";
-const CHAT_ID="350662896";
+function analyze(){
 
-const ideas = {
+next(6);
 
-beauty:[
-"5 ошибок в уходе за волосами",
-"Тренды маникюра 2025",
-"До/после клиента",
-"Как выбрать мастера",
-"Мифы о косметологии"
-],
+setTimeout(()=>{
 
-dentist:[
-"5 ошибок при чистке зубов",
-"Когда менять зубную щетку",
-"Мифы о брекетах",
-"Кейс пациента",
-"Ответ стоматолога на вопрос"
-],
+next(7);
 
-fitness:[
-"5 упражнений для новичков",
-"Ошибка №1 в тренировках",
-"История клиента",
-"План питания",
-"Тренировка дома"
-],
-
-restaurant:[
-"Блюдо недели",
-"Как готовится фирменное блюдо",
-"Отзывы гостей",
-"История ресторана",
-"Совет шефа"
-],
-
-shop:[
-"Товар недели",
-"Как выбрать продукт",
-"Отзывы клиентов",
-"ТОП-5 товаров",
-"Разбор популярного вопроса"
-],
-
-realestate:[
-"5 ошибок при покупке квартиры",
-"Как выбрать район",
-"Кейс клиента",
-"Тренды рынка недвижимости",
-"Совет риелтора"
-],
-
-education:[
-"5 ошибок в обучении",
-"Как выбрать курс",
-"История ученика",
-"Совет преподавателя",
-"Разбор популярного вопроса"
-],
-
-coach:[
-"Мифы о психологии",
-"История клиента",
-"5 советов по саморазвитию",
-"Ответ на популярный вопрос",
-"Практическое упражнение"
-],
-
-autoservice:[
-"5 ошибок при обслуживании авто",
-"Когда менять масло",
-"Разбор поломки",
-"Совет механика",
-"История клиента"
-],
-
-clinic:[
-"Мифы о здоровье",
-"Советы врача",
-"Ответ на популярный вопрос",
-"История пациента",
-"5 симптомов которые нельзя игнорировать"
-],
-
-law:[
-"5 ошибок в договорах",
-"Совет юриста",
-"Разбор судебного кейса",
-"Ответ на вопрос клиентов",
-"Юридический лайфхак"
-],
-
-marketing:[
-"5 ошибок в маркетинге",
-"Как увеличить заявки",
-"Разбор рекламного кейса",
-"3 совета по продвижению",
-"Мифы о рекламе"
-],
-
-travel:[
-"Топ направлений сезона",
-"Советы путешественникам",
-"История туриста",
-"Лайфхаки для поездок",
-"Разбор популярного направления"
-],
-
-construction:[
-"5 ошибок при ремонте",
-"Советы строителя",
-"До/после ремонта",
-"Разбор проекта",
-"Как выбрать материалы"
-],
-
-expert:[
-"История вашего пути",
-"5 советов экспертам",
-"Разбор ошибки клиентов",
-"Ответ на популярный вопрос",
-"Чеклист для подписчиков"
-]
-
-};
-
-function generateIdeas(){
-
-let niche=document.getElementById("niche").value;
-
-if(!niche){
-alert("Выберите нишу");
-return;
-}
-
-let list=[...ideas[niche]].sort(()=>0.5-Math.random()).slice(0,3);
-
-let html="<h3>Идеи постов:</h3>";
-
-list.forEach(i=>{
-html+=`<div class="idea">${i}</div>`
-});
-
-document.getElementById("ideas").innerHTML=html;
-
-document.getElementById("leadBtn").style.display="block";
+},2000);
 
 }
 
 function sendLead(){
 
 let name=document.getElementById("name").value;
+let niche=document.getElementById("niche").value;
 
-let select=document.getElementById("niche");
-let niche=select.options[select.selectedIndex].text;
+let user="";
 
-let username=user?.username ? "@"+user.username : "нет username";
-let userid=user?.id || "неизвестно";
+if(tg.initDataUnsafe.user){
 
-let message=`🔥 Новая заявка Kineiro
+let u=tg.initDataUnsafe.user;
 
-Имя: ${name}
-Ниша: ${niche}
-
-Telegram: ${username}
-UserID: ${userid}`;
-
-fetch(`https://api.telegram.org/bot${BOT TOKEN}/sendMessage?chat_id=${CHAT ID}&text=`+encodeURIComponent(message));
-
-document.getElementById("phoneBlock").style.display="block";
+if(u.username){
+user="https://t.me/"+u.username;
+}else{
+user="tg://user?id="+u.id;
+}
 
 }
 
-function requestPhone(){
+const BOT_TOKEN="BOT_TOKEN";
+const CHAT_ID="CHAT_ID";
 
-tg.requestContact();
+let text="🔥 Новая заявка Kineiro\n\n"+
+"Имя: "+name+"\n"+
+"Ниша: "+niche+"\n"+
+"Telegram: "+user;
 
-tg.onEvent('contactReceived', function(contact){
+fetch("https://api.telegram.org/bot"+BOT_TOKEN+"/sendMessage",{
 
-let phone=contact.phone_number;
+method:"POST",
 
-let message=`📞 Пользователь оставил телефон
+headers:{
+"Content-Type":"application/json"
+},
 
-Телефон: ${phone}`;
+body:JSON.stringify({
 
-fetch(`https://api.telegram.org/bot${BOT TOKEN}/sendMessage?chat_id=${CHAT ID}&text=`+encodeURIComponent(message));
+chat_id:CHAT_ID,
+text:text
 
-alert("Спасибо! Мы свяжемся с вами.");
+})
 
 });
+
+alert("Заявка отправлена");
 
 }
 
@@ -351,6 +344,3 @@ alert("Спасибо! Мы свяжемся с вами.");
 
 </body>
 </html>
-
-
-
