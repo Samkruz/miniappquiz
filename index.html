@@ -57,7 +57,12 @@ display:none;
 }
 
 .checkbox{
-margin-top:8px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+padding:8px 0;
+font-size:16px;
 }
 
 .result{
@@ -144,16 +149,45 @@ margin-top:10px;
 
 <p>Какие соцсети используете?</p>
 
-<div class="checkbox"><input type="checkbox" value="Instagram"> Instagram</div>
-<div class="checkbox"><input type="checkbox" value="Telegram"> Telegram</div>
-<div class="checkbox"><input type="checkbox" value="TikTok"> TikTok</div>
-<div class="checkbox"><input type="checkbox" value="YouTube"> YouTube</div>
-<div class="checkbox"><input type="checkbox" value="VK"> VK</div>
-<div class="checkbox"><input type="checkbox" value="Pinterest"> Pinterest</div>
-<div class="checkbox"><input type="checkbox" value="X"> X</div>
-<div class="checkbox"><input type="checkbox" value="LinkedIn"> LinkedIn</div>
-<div class="checkbox"><input type="checkbox" value="Facebook"> Facebook</div>
-<div class="checkbox"><input type="checkbox" value="Дзен"> Дзен</div>
+<div class="checkbox">
+<span>Instagram</span>
+<input type="checkbox" value="Instagram">
+</div>
+
+<div class="checkbox">
+<span>Telegram</span>
+<input type="checkbox" value="Telegram">
+</div>
+
+<div class="checkbox">
+<span>Вконтакте</span>
+<input type="checkbox" value="TikTok">
+</div>
+
+<div class="checkbox">
+<span>YouTube</span>
+<input type="checkbox" value="YouTube">
+</div>
+
+<div class="checkbox">
+<span>Дзен</span>
+<input type="checkbox" value="Instagram">
+</div>
+
+<div class="checkbox">
+<span>Wordpress</span>
+<input type="checkbox" value="Telegram">
+</div>
+
+<div class="checkbox">
+<span>Max</span>
+<input type="checkbox" value="TikTok">
+</div>
+
+<div class="checkbox">
+<span>Одноклассники</span>
+<input type="checkbox" value="YouTube">
+</div>
 
 <button onclick="next(5)">Далее</button>
 
@@ -344,3 +378,4 @@ alert("Заявка отправлена");
 
 </body>
 </html>
+
