@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Kineiro</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+.progress{
+width:100%;
+height:8px;
+background:rgba(255,255,255,0.1);
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+width:0%;
+height:100%;
+background:linear-gradient(90deg,#3b82f6,#9333ea);
+transition:width 2s linear;
+}
+
+body{
+margin:0;
+font-family:Arial;
+color:white;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding-top:60px;
+
+background:
+radial-gradient(circle at 20% 30%, #3b82f6, transparent 40%),
+radial-gradient(circle at 80% 70%, #9333ea, transparent 40%),
+#020617;
+}
+
+.card{
+backdrop-filter:blur(20px);
+background:rgba(15,23,42,0.7);
+padding:30px;
+border-radius:20px;
+width:340px;
+text-align:center;
+box-shadow:0 0 40px rgba(59,130,246,0.4);
+}
+
+select,input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:15px;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:14px;
+border-radius:12px;
+border:none;
+margin-top:15px;
+background:linear-gradient(90deg,#3b82f6,#9333ea);
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.idea{
+background:rgba(255,255,255,0.05);
+padding:10px;
+border-radius:8px;
+margin-top:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Kineiro</h2>
+<p>Получите идеи постов</p>
+
+<input id="name" placeholder="Ваше имя">
+
+<select id="niche">
+
+<option value="">Выберите нишу</option>
+<option value="beauty">Салон красоты</option>
+<option value="dentist">Стоматология</option>
+<option value="fitness">Фитнес клуб</option>
+<option value="restaurant">Ресторан / кафе</option>
+<option value="shop">Интернет-магазин</option>
+<option value="realestate">Недвижимость</option>
+<option value="education">Образование</option>
+<option value="coach">Психолог / коуч</option>
+<option value="autoservice">Автосервис</option>
+<option value="clinic">Медицинская клиника</option>
+<option value="law">Юридические услуги</option>
+<option value="marketing">Маркетинг</option>
+<option value="travel">Туризм</option>
+<option value="construction">Строительство</option>
+<option value="expert">Личный бренд</option>
+
+</select>
+
+<button onclick="generateIdeas()">Получить идеи</button>
+
+<div id="loader" style="display:none;margin-top:20px;">
+
+<p>AI анализирует вашу нишу...</p>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+</div>
+
+<div id="ideas"></div>
+
+<button id="leadBtn" onclick="sendLead()" style="display:none;">
+Получить контент план
+</button>
+
+<div id="phoneBlock" style="display:none;">
+<button onclick="requestPhone()">
+Оставить номер телефона
+</button>
+</div>
+
+</div>
+
+<script>
+
+let tg = window.Telegram?.WebApp;
+
+let user = {
+username:"unknown",
+id:"unknown"
+};
+
+if(tg){
+tg.expand();
+user = tg.initDataUnsafe?.user || user;
+}
+
+const BOT_TOKEN="8639552988:AAGi3x43OyD5PrRDyOUKrvNk6Ew2sHXDy8Q";
+const CHAT_ID="350662896";
+
+const ideas = {
+
+beauty:[
+"5 ошибок в уходе за волосами",
+"Тренды маникюра 2025",
+"До/после клиента",
+"Как выбрать мастера",
+"Мифы о косметологии"
+],
+
+dentist:[
+"5 ошибок при чистке зубов",
+"Когда менять зубную щетку",
+"Мифы о брекетах",
+"Кейс пациента",
+"Ответ стоматолога на вопрос"
+],
+
+fitness:[
+"5 упражнений для новичков",
+"Ошибка №1 в тренировках",
+"История клиента",
+"План питания",
+"Тренировка дома"
+],
+
+restaurant:[
+"Блюдо недели",
+"Как готовится фирменное блюдо",
+"Отзывы гостей",
+"История ресторана",
+"Совет шефа"
+],
+
+shop:[
+"Товар недели",
+"Как выбрать продукт",
+"Отзывы клиентов",
+"ТОП-5 товаров",
+"Разбор популярного вопроса"
+],
+
+realestate:[
+"5 ошибок при покупке квартиры",
+"Как выбрать район",
+"Кейс клиента",
+"Тренды рынка недвижимости",
+"Совет риелтора"
+],
+
+education:[
+"5 ошибок в обучении",
+"Как выбрать курс",
+"История ученика",
+"Совет преподавателя",
+"Разбор популярного вопроса"
+],
+
+coach:[
+"Мифы о психологии",
+"История клиента",
+"5 советов по саморазвитию",
+"Ответ на популярный вопрос",
+"Практическое упражнение"
+],
+
+autoservice:[
+"5 ошибок при обслуживании авто",
+"Когда менять масло",
+"Разбор поломки",
+"Совет механика",
+"История клиента"
+],
+
+clinic:[
+"Мифы о здоровье",
+"Советы врача",
+"Ответ на популярный вопрос",
+"История пациента",
+"5 симптомов которые нельзя игнорировать"
+],
+
+law:[
+"5 ошибок в договорах",
+"Совет юриста",
+"Разбор судебного кейса",
+"Ответ на вопрос клиентов",
+"Юридический лайфхак"
+],
+
+marketing:[
+"5 ошибок в маркетинге",
+"Как увеличить заявки",
+"Разбор рекламного кейса",
+"3 совета по продвижению",
+"Мифы о рекламе"
+],
+
+travel:[
+"Топ направлений сезона",
+"Советы путешественникам",
+"История туриста",
+"Лайфхаки для поездок",
+"Разбор популярного направления"
+],
+
+construction:[
+"5 ошибок при ремонте",
+"Советы строителя",
+"До/после ремонта",
+"Разбор проекта",
+"Как выбрать материалы"
+],
+
+expert:[
+"История вашего пути",
+"5 советов экспертам",
+"Разбор ошибки клиентов",
+"Ответ на популярный вопрос",
+"Чеклист для подписчиков"
+]
+
+};
+
+function generateIdeas(){
+
+let niche=document.getElementById("niche").value;
+
+if(!niche){
+alert("Выберите нишу");
+return;
+}
+
+let list=[...ideas[niche]].sort(()=>0.5-Math.random()).slice(0,3);
+
+let html="<h3>Идеи постов:</h3>";
+
+list.forEach(i=>{
+html+=`<div class="idea">${i}</div>`
+});
+
+document.getElementById("ideas").innerHTML=html;
+
+document.getElementById("leadBtn").style.display="block";
+
+}
+
+function sendLead(){
+
+let name=document.getElementById("name").value;
+
+let select=document.getElementById("niche");
+let niche=select.options[select.selectedIndex].text;
+
+let username=user?.username ? "@"+user.username : "нет username";
+let userid=user?.id || "неизвестно";
+
+let message=`🔥 Новая заявка Kineiro
+
+Имя: ${name}
+Ниша: ${niche}
+
+Telegram: ${username}
+UserID: ${userid}`;
+
+fetch(`https://api.telegram.org/bot${BOT TOKEN}/sendMessage?chat_id=${CHAT ID}&text=`+encodeURIComponent(message));
+
+document.getElementById("phoneBlock").style.display="block";
+
+}
+
+function requestPhone(){
+
+tg.requestContact();
+
+tg.onEvent('contactReceived', function(contact){
+
+let phone=contact.phone_number;
+
+let message=`📞 Пользователь оставил телефон
+
+Телефон: ${phone}`;
+
+fetch(`https://api.telegram.org/bot${BOT TOKEN}/sendMessage?chat_id=${CHAT ID}&text=`+encodeURIComponent(message));
+
+alert("Спасибо! Мы свяжемся с вами.");
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
+
+
+
