@@ -206,32 +206,51 @@ function showCalculating() {
     }, 3500);
 }
 
-// Расчёт результатов
+// Расчёт результатов — ИСПРАВЛЕННАЯ ВЕРСИЯ
 function calculateAndShowResults() {
-    // Расчёт упущенной прибыли (потенциальные клиенты)
-    const potentialClients = Math.floor((userData.networks * userData.frequency * userData.contentValue * 15));
-    const moneyLoss = potentialClients * userData.avgCheck * 0.2; // 20% конверсия в продажу
+    // === ИСПРАВЛЕННАЯ ЛОГИКА РАСЧЁТА ===
     
-    // Время (часы в месяц)
-    const timeLoss = userData.hours * 4.3; // 4.3 недели в месяце
+    // 1. Упущенная прибыль (потенциальные клиенты, которых нет из-за неэффективного SMM)
+    // Формула: количество соцсетей × частота публикаций × качество контента × базовый охват
+    const potentialReach = userData.networks * userData.frequency * userData.contentValue * 100;
+    const conversionRate = 0.05; // 5% конверсия в лиды
+    const potentialClients = Math.floor(potentialReach * conversionRate);
+    const moneyLoss = potentialClients * userData.avgCheck;
     
-    // Переплата (если текущие затраты больше эффективной стоимости Кинейро)
-    const costLoss = userData.currentCost > PRICING.monthlyEffective ? 
-        userData.currentCost - PRICING.monthlyEffective : 0;
+    // 2. Время впустую (часы в месяц, потраченные на ручной SMM)
+    const hoursPerMonth = userData.hours * 4.3; // 4.3 недели в месяце
+    const hourValue = 2000; // стоимость часа работодателя/предпринимателя
+    const timeLossValue = hoursPerMonth * hourValue;
     
-    // Текущие расходы (время + деньги)
-    const hourValue = 3000; // условная стоимость часа бизнесмена
-    const currentSpend = userData.currentCost + (userData.hours * hourValue * 4.3);
+    // 3. Переплата (разница между текущими затратами и стоимостью Кинейро)
+    // Если текущие затраты больше — это переплата
+    const currentMonthlySpend = userData.currentCost;
+    const kineiroMonthly = PRICING.monthlyEffective; // ~33 333 ₽
+    const overpayment = Math.max(0, currentMonthlySpend - kineiroMonthly);
     
-    // Экономия = текущие затраты - стоимость Кинейро + часть восстановленной прибыли
-    const savings = Math.max(0, currentSpend - PRICING.monthlyEffective + (moneyLoss * 0.3));
+    // 4. Общие текущие затраты (деньги + время)
+    const totalCurrentSpend = currentMonthlySpend + timeLossValue;
     
-    // Отображение
+    // 5. Экономия = текущие затраты - стоимость Кинейро
+    // (но не учитываем упущенную прибыль как экономию — это отдельная история)
+    const realSavings = Math.max(0, totalCurrentSpend - kineiroMonthly);
+    
+    // === ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ ===
+    
+    // Упущенная прибыль
     document.getElementById('money-loss').textContent = formatMoney(moneyLoss) + '/мес';
-    document.getElementById('time-loss').textContent = Math.round(timeLoss) + ' часов';
-    document.getElementById('cost-loss').textContent = formatMoney(costLoss) + '/мес';
-    document.getElementById('current-spend').textContent = formatMoney(currentSpend) + '/мес';
-    document.getElementById('savings').textContent = formatMoney(savings) + '/мес';
+    
+    // Время
+    document.getElementById('time-loss').textContent = Math.round(hoursPerMonth) + ' часов';
+    
+    // Переплата (если есть)
+    document.getElementById('cost-loss').textContent = formatMoney(overpayment) + '/мес';
+    
+    // Текущие общие затраты
+    document.getElementById('current-spend').textContent = formatMoney(totalCurrentSpend) + '/мес';
+    
+    // Реальная экономия
+    document.getElementById('savings').textContent = formatMoney(realSavings) + '/мес';
     
     showScreen('result-screen');
     
@@ -328,3 +347,4 @@ const observer = new MutationObserver((mutations) => {
 document.querySelectorAll('.screen').forEach(screen => {
     observer.observe(screen, { attributes: true, attributeFilter: ['class'] });
 });
+
